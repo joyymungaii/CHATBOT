@@ -1,28 +1,7 @@
 import React, { useState } from "react";
 
 const Chat = () => {
-  const [messages, setMessages] = useState([
-    { sender: "bot", text: "Hello! I am your chatbot. Ask me anything." },
-  ]);
-  const [input, setInput] = useState("");
-
-  const generateBotReply = (text) => {
-    const lowerText = text.toLowerCase();
-
-    if (lowerText.includes("hello") || lowerText.includes("hi")) {
-      return "Hi there! How can I help you today?";
-    }
-    if (lowerText.includes("help")) {
-      return "I can answer simple questions. Try asking about greetings, your name, or how I'm doing.";
-    }
-    if (lowerText.includes("name")) {
-      return "I am a simple chatbot built in React.";
-    }
-    if (lowerText.includes("weather")) {
-      return "I don't have live weather data, but I hope it's nice where you are!";
-    }
-    return "Sorry, I still learn. Please try asking in a different way.";
-  };
+ 
 
   const handleSubmit = (event) => {
     event.preventDefault();
