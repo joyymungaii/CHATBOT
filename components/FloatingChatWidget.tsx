@@ -74,7 +74,8 @@ export default function FloatingChatWidget() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Request failed')
+        // Surface the real server error message to the user
+        throw new Error(data.error || `Server error ${response.status}`)
       }
 
       const botMessage: Message = {
@@ -86,11 +87,13 @@ export default function FloatingChatWidget() {
 
       setMessages((prev) => [...prev, botMessage])
     } catch (error) {
-      console.error('[Chat Error]', error)
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      console.error('[Chat Error]', message)
 
       const errorMessage: Message = {
         id: Date.now() + 1,
-        text: "Sorry, I couldn't connect right now. Please try again in a moment.",
+        // Show the actual error so we can diagnose it
+        text: `Error: ${message}`,
         sender: 'bot',
         timestamp: new Date(),
       }
