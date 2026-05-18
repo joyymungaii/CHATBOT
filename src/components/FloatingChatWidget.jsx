@@ -23,42 +23,65 @@ export default function FloatingChatWidget() {
     scrollToBottom()
   }, [messages])
 
-  const generateBotReply = (userMessage) => {
-    const replies = [
-      "Thanks for reaching out! How can we help you with your internet needs?",
-      "Great question! We have fast WiFi coverage in Kiambu and Nyahururu. What would you like to know?",
-      "We're here to help! Are you interested in our high-speed WiFi services?",
-      "Excellent! Let me know if you have any questions about our WiFi plans in your area.",
-      "Thanks for chatting with us! Is there anything else about our services you'd like to know?",
-    ]
-    return replies[Math.floor(Math.random() * replies.length)]
+  const handleSendMessage = async () => {
+  if (!inputValue.trim()) return
+
+  const userMessage = {
+    id: Date.now(),
+    text: inputValue,
+    sender: 'user',
+    timestamp: new Date(),
   }
 
-  const handleSendMessage = () => {
-    if (inputValue.trim() === '') return
+  // Add user message to chat
+  setMessages((prev) => [...prev, userMessage])
 
-    const userMessage = {
-      id: messages.length + 1,
-      text: inputValue,
-      sender: 'user',
+  const currentInput = inputValue
+
+  // Clear input
+  setInputValue('')
+  setIsLoading(true)
+
+  try {
+    // Send message to Gemini API route
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: currentInput,
+      }),
+    })
+
+    const data = await response.json()
+
+    // Add AI reply
+    const botMessage = {
+      id: Date.now() + 1,
+      text: data.reply,
+      sender: 'bot',
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, userMessage])
-    setInputValue('')
-    setIsLoading(true)
+    setMessages((prev) => [...prev, botMessage])
 
-    setTimeout(() => {
-      const botMessage = {
-        id: messages.length + 2,
-        text: generateBotReply(inputValue),
-        sender: 'bot',
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, botMessage])
-      setIsLoading(false)
-    }, 800)
+  } catch (error) {
+    console.error(error)
+
+    // Error message
+    const errorMessage = {
+      id: Date.now() + 1,
+      text: 'Sorry, something went wrong.',
+      sender: 'bot',
+      timestamp: new Date(),
+    }
+
+    setMessages((prev) => [...prev, errorMessage])
   }
+
+  setIsLoading(false)
+}
 
   const formatTime = (date) => {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
