@@ -165,23 +165,23 @@ export default function FloatingChatWidget() {
       </div>
 
       {/* Floating Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`w-14 h-14 rounded-full shadow-lg transition-all duration-300 flex items-center justify-center text-white font-semibold text-2xl scale-100`}
-        style={{
-          backgroundColor: isOpen ? '#791115' : '#094166'
-        }}
-      >
-        {isOpen ? (
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        ) : (
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20.656 17.008a9.993 9.993 0 10-14.85-3.7c1.02-1.357 2.08-2.693 3.188-3.996a5.991 5.991 0 0111.234 6.08.948.948 0 01-1.084.595c-.822-.247-1.644-.48-2.453-.704a9.42 9.42 0 00-9.3 13.5.942.942 0 00.833.67c.798.087 1.595.165 2.39.242 6.554.767 13.048-2.823 16.611-8.878a.953.953 0 00-.223-1.251z" />
-          </svg>
-        )}
-      </button>
+    <button
+      onClick={() => setIsOpen(!isOpen)}
+      className="w-14 h-14 rounded-full shadow-lg flex items-center justify-center overflow-hidden"
+      style={{
+        backgroundColor: isOpen ? '#791115' : '#094166',
+      }}
+    >
+      {isOpen ? (
+        <span className="text-white text-xl font-bold">✕</span>
+      ) : (
+        <img
+          src="src/assets/logo.jpg"
+          alt="Chat"
+          className="w-full h-full object-cover"
+        />
+      )}
+    </button>
     </div>
   )
 }
