@@ -2,12 +2,12 @@
  * Gemini API Configuration
  * 
  * This file manages the Gemini API key and related settings.
- * The API key should be stored in the .env.local file as NEXT_PUBLIC_GEMINI_API_KEY
+ * The API key should be stored in the .env.local file as GEMINI_API_KEY
  */
 
 export const geminiConfig = {
   // API Key - retrieved from environment variables
-  apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY || '',
+  apiKey: process.env.GEMINI_API_KEY || '',
 
   // Model configuration
   model: 'gemini-pro',
@@ -50,7 +50,7 @@ export const geminiConfig = {
 export const validateGeminiConfig = (): boolean => {
   if (!geminiConfig.apiKey) {
     console.error(
-      'Gemini API key is not configured. Please add NEXT_PUBLIC_GEMINI_API_KEY to your .env.local file.'
+      'Gemini API key is not configured. Please add GEMINI_API_KEY to your .env.local file.'
     );
     return false;
   }
