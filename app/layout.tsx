@@ -2,15 +2,15 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Chat Assistant',
-  description: 'A modern, responsive chatbot interface',
+  title: 'Nosteq Network | Fast WiFi for Kiambu & Nyahururu',
+  description:
+    'Nosteq Network provides lightning-fast and reliable WiFi connectivity across Kiambu and Nyahururu. Chat with our support team 24/7.',
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  userScalable: false,
-  themeColor: '#4299e1',
+  themeColor: '#791115',
 }
 
 export default function RootLayout({
@@ -20,9 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-background text-foreground">
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   )
 }
