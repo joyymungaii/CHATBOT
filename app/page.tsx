@@ -1,13 +1,41 @@
-import FloatingChatWidget from '@/components/FloatingChatWidget'
+/**
+ * app/page.tsx
+ * ─────────────────────────────────────────────────────────────────────────────
+ * Main page — protected by middleware.
+ * Reads the session server-side to display the logged-in user's name.
+ * ─────────────────────────────────────────────────────────────────────────────
+ */
 
-export default function Home() {
+import { redirect } from 'next/navigation'
+import { getSession } from '@/lib/auth'
+import FloatingChatWidget from '@/components/FloatingChatWidget'
+import LogoutButton from '@/components/LogoutButton'
+
+export default async function Home() {
+  // Server-side auth check — middleware handles the redirect, but this
+  // gives us the session data to display the username in the header.
+  const session = await getSession()
+  if (!session) redirect('/login')
+
   return (
     <div className="w-full min-h-screen bg-background text-foreground">
       {/* Header */}
-      <header className="text-white py-8 shadow-md" style={{ backgroundColor: '#791115' }}>
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <h1 className="text-3xl md:text-4xl font-bold">Nosteq Network</h1>
-          <p className="text-lg mt-2 opacity-90">Fast &amp; Reliable WiFi for Kiambu &amp; Nyahururu</p>
+      <header className="text-white py-6 shadow-md" style={{ backgroundColor: '#791115' }}>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold">Nosteq Network</h1>
+            <p className="text-lg mt-1 opacity-90">Fast &amp; Reliable WiFi for Kiambu &amp; Nyahururu</p>
+          </div>
+          {/* User info + logout */}
+          <div className="flex items-center gap-3">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm font-medium">{session.username}</p>
+              {session.plan && (
+                <p className="text-xs opacity-75">{session.plan}</p>
+              )}
+            </div>
+            <LogoutButton />
+          </div>
         </div>
       </header>
 
@@ -16,7 +44,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="mb-12">
           <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ color: '#791115' }}>
-            Experience High-Speed WiFi
+            Welcome back, {session.username}
           </h2>
           <p className="text-gray-600 text-lg leading-relaxed mb-6">
             At Nosteq Network, we provide lightning-fast and reliable WiFi connectivity across
@@ -60,8 +88,8 @@ export default function Home() {
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-4">Need Help with WiFi?</h2>
           <p className="text-lg mb-6">
-            Have questions about our service, coverage areas, or plans? Click the chat button in
-            the bottom-right corner to chat with our support team.
+            Have questions about your service, coverage, or plan? Click the chat button in
+            the bottom-right corner to chat with our AI support assistant.
           </p>
           <button className="bg-white text-gray-900 px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
             Start Chatting Now
@@ -114,8 +142,8 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Floating Chat Widget — renders on top of everything */}
-      <FloatingChatWidget />
+      {/* Floating Chat Widget */}
+      <FloatingChatWidget username={session.username} />
     </div>
   )
 }
