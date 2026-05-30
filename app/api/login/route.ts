@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSessionToken, SESSION_COOKIE_OPTIONS } from '@/lib/auth'
 
-const PHPRADIUS_API = 'https://devs1.phpradius.com/index.php/api/login'
+const PHPRADIUS_API = 'https://nosteq.phpradius.com/index.php/api/login'
 
 export async function POST(req: NextRequest) {
   try {
