@@ -34,25 +34,25 @@ export default function LoginPage() {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.trim(), password }),
+        body: JSON.stringify({ 
+          username: username.trim(), 
+          password 
+        }),
       })
 
       const data = await res.json()
 
       if (!res.ok || !data.ok) {
         setError(data.error || 'Login failed. Please check your credentials.')
+        setIsLoading(false)
         return
       }
 
-      // Login successful — redirect to home page (chatbot)
-      // Use setTimeout to allow the state update (setIsLoading in finally) to complete before redirect
-      setTimeout(() => {
-        router.push('/')
-      }, 100)
-
+      // Login successful — redirect to home page
+      router.push('/')
+      
     } catch {
       setError('Unable to connect. Please check your internet connection.')
-    } finally {
       setIsLoading(false)
     }
   }

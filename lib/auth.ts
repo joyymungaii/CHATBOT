@@ -21,11 +21,13 @@ const SESSION_DURATION = 60 * 60 * 8 // 8 hours in seconds
 
 export interface SessionPayload {
   username: string
-  radiusToken: string   // stored server-side in JWT, never sent to browser
-  plan?: string
-  status?: string
-  iat?: number
-  exp?: number
+  token: string
+  userId: number
+  operatorId: number
+  portalLogin: number
+  planId: number
+  abilities: Record<string, boolean>
+  ispDetail: Record<string, unknown>
 }
 
 // ── Create session JWT ────────────────────────────────────────────────────────
