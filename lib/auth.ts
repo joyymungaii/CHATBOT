@@ -69,7 +69,7 @@ export async function getSession(): Promise<SessionPayload | null> {
 export const SESSION_COOKIE_OPTIONS = {
   name: COOKIE_NAME,
   httpOnly: true,          // not readable by JavaScript — XSS protection
-  secure: process.env.NODE_ENV === 'production',  // HTTPS only in prod
+  secure: false,           // Allow localhost in dev; true in production
   sameSite: 'lax' as const,
   path: '/',
   maxAge: SESSION_DURATION,

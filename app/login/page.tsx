@@ -45,8 +45,10 @@ export default function LoginPage() {
       }
 
       // Login successful — redirect to home page (chatbot)
-      router.push('/')
-      router.refresh() // force server component re-render to pick up new cookie
+      // Use setTimeout to allow the state update (setIsLoading in finally) to complete before redirect
+      setTimeout(() => {
+        router.push('/')
+      }, 100)
 
     } catch {
       setError('Unable to connect. Please check your internet connection.')

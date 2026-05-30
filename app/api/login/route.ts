@@ -54,17 +54,10 @@ export async function POST(req: NextRequest) {
     })
 
     const json = await res.json()
-    
-    console.log('[v0] PHP Radius login response:', {
-      status: res.status,
-      ok: res.ok,
-      body: json,
-    })
 
     if (!res.ok || json.error || json.status === 'error') {
       // PHP Radius returns 200 with error body in some versions
       const msg = json.message || json.error || 'Invalid username or password.'
-      console.log('[v0] Login failed:', msg)
       return NextResponse.json({ error: msg }, { status: 401 })
     }
 
@@ -72,7 +65,6 @@ export async function POST(req: NextRequest) {
     radiusToken = json.token || json.access_token || json.data?.token || ''
 
     if (!radiusToken) {
-      console.log('[v0] No token found in response. Response was:', json)
       return NextResponse.json(
         { error: 'Login failed: no token returned from authentication server.' },
         { status: 401 }
@@ -81,10 +73,8 @@ export async function POST(req: NextRequest) {
 
     // Extract user profile data if available
     userData = json.data || json.user || json.customer || {}
-    console.log('[v0] Login successful for user:', username)
 
-  } catch (err) {
-    console.error('[v0] PHP Radius unreachable:', err)
+  } catch {
     return NextResponse.json(
       { error: 'Authentication server is unavailable. Please try again.' },
       { status: 503 }
