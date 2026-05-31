@@ -42,16 +42,17 @@ export default function LoginPage() {
 
       const data = await res.json()
 
-      if (!res.ok || !data.ok) {
+      if (!res.ok) {
         setError(data.error || 'Login failed. Please check your credentials.')
         setIsLoading(false)
         return
       }
 
-      // Login successful — redirect to home page
+      // Login successful — navigate to home
       router.push('/')
       
-    } catch {
+    } catch (err) {
+      console.error('Login error:', err)
       setError('Unable to connect. Please check your internet connection.')
       setIsLoading(false)
     }

@@ -21,7 +21,7 @@ const SESSION_DURATION = 60 * 60 * 8 // 8 hours in seconds
 
 export interface SessionPayload {
   username: string
-  token: string
+  apiToken: string
   userId: number
   operatorId: number
   portalLogin: number

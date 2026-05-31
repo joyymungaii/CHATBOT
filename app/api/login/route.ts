@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Call PHP Radius login API using form-data as per documentation
+    // Call PHP Radius API with FormData as per documentation
     const formData = new FormData()
     formData.append('username', username)
     formData.append('password', password)
@@ -28,23 +28,23 @@ export async function POST(req: NextRequest) {
     const data = await response.json()
 
     // Check if login was successful
-    if (!response.ok || data.error || !data.data?.token) {
+    if (!response.ok || !data.data?.token) {
       return NextResponse.json(
-        { error: data.message || data.error || 'Invalid credentials.' },
+        { error: data.message || 'Invalid credentials.' },
         { status: 401 }
       )
     }
 
-    // Extract token and user data from response
-    const token = data.data.token
+    // Extract data from response per documentation
+    const apiToken = data.data.token
     const user = data.data.user || {}
     const abilities = data.data.abilities || {}
     const ispDetail = data.data.ispDetail || {}
 
-    // Create session token
+    // Create session with all user data
     const sessionToken = await createSessionToken({
       username,
-      token,
+      apiToken,
       userId: user.id,
       operatorId: user.operator_id,
       portalLogin: user.portalLogin,
@@ -53,13 +53,8 @@ export async function POST(req: NextRequest) {
       ispDetail,
     })
 
-    // Set HTTP-only cookie and return success
-    const res = NextResponse.json({
-      ok: true,
-      username,
-      user,
-    })
-
+    // Set cookie and return success
+    const res = NextResponse.json({ ok: true })
     res.cookies.set({
       ...SESSION_COOKIE_OPTIONS,
       value: sessionToken,
@@ -69,8 +64,8 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(
-      { error: 'Authentication server is unavailable. Please try again.' },
-      { status: 503 }
+      { error: 'Server error. Please try again.' },
+      { status: 500 }
     )
   }
 }
