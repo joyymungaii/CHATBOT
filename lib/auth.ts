@@ -62,8 +62,14 @@ export async function getSessionFromRequest(req: NextRequest): Promise<SessionPa
 export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies()
   const token = cookieStore.get(COOKIE_NAME)?.value
-  if (!token) return null
-  return verifySessionToken(token)
+  console.log('[v0] getSession - token exists:', !!token)
+  if (!token) {
+    console.log('[v0] getSession - no token, returning null')
+    return null
+  }
+  const session = await verifySessionToken(token)
+  console.log('[v0] getSession - session:', session)
+  return session
 }
 
 // ── Cookie config ─────────────────────────────────────────────────────────────

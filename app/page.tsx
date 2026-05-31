@@ -30,8 +30,8 @@ export default async function Home() {
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
               <p className="text-sm font-medium">{session.username}</p>
-              {session.plan && (
-                <p className="text-xs opacity-75">{session.plan}</p>
+              {session.planId && (
+                <p className="text-xs opacity-75">Plan ID: {session.planId}</p>
               )}
             </div>
             <LogoutButton />

@@ -41,15 +41,19 @@ export default function LoginPage() {
       })
 
       const data = await res.json()
+      console.log('[v0] Login response:', { status: res.status, ok: res.ok, data })
 
       if (!res.ok) {
+        console.log('[v0] Login failed:', data.error)
         setError(data.error || 'Login failed. Please check your credentials.')
         setIsLoading(false)
         return
       }
 
       // Login successful — navigate to home
-      router.push('/')
+      console.log('[v0] Login successful, pushing to /')
+      // Use window.location to ensure the cookie is sent with the request
+      window.location.href = '/'
       
     } catch (err) {
       console.error('Login error:', err)

@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSessionToken, SESSION_COOKIE_OPTIONS } from '@/lib/auth'
+import { createSessionToken } from '@/lib/auth'
 
 const PHPRADIUS_API = 'https://nosteq.phpradius.com/index.php/api/login'
+const SESSION_DURATION = 60 * 60 * 8 // 8 hours
 
 export async function POST(req: NextRequest) {
   try {
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
     const ispDetail = data.data.ispDetail || {}
 
     // Create session with all user data
-    const sessionToken = await createSessionToken({
+    const sessionPayload = {
       username,
       apiToken,
       userId: user.id,
@@ -51,14 +52,21 @@ export async function POST(req: NextRequest) {
       planId: user.plan_id,
       abilities,
       ispDetail,
-    })
+    }
+    
+    console.log('[v0] Session payload:', sessionPayload)
+    const sessionToken = await createSessionToken(sessionPayload)
+    console.log('[v0] Session token created:', sessionToken.substring(0, 50) + '...')
 
     // Set cookie and return success
     const res = NextResponse.json({ ok: true })
-    res.cookies.set({
-      ...SESSION_COOKIE_OPTIONS,
-      value: sessionToken,
+    res.cookies.set('nosteq_session', sessionToken, {
+      httpOnly: true,
+      path: '/',
+      maxAge: SESSION_DURATION,
+      sameSite: 'lax',
     })
+    console.log('[v0] Cookie set with name nosteq_session, returning success')
 
     return res
   } catch (error) {

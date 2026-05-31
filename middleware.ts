@@ -40,19 +40,24 @@ export async function middleware(req: NextRequest) {
 
   // Check for session cookie
   const token = req.cookies.get('nosteq_session')?.value
+  console.log('[v0] Middleware - path:', pathname, 'has token:', !!token)
 
   if (!token) {
+    console.log('[v0] Middleware - no token found, redirecting')
     return redirectOrReject(req)
   }
 
   // Verify the JWT is valid and not expired
   const session = await verifySessionToken(token)
+  console.log('[v0] Middleware - session verified:', !!session)
 
   if (!session) {
+    console.log('[v0] Middleware - session verification failed, redirecting')
     return redirectOrReject(req)
   }
 
   // Valid session — pass through
+  console.log('[v0] Middleware - valid session, allowing through')
   return NextResponse.next()
 }
 
